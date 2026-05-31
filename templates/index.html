@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Auto MPG Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(rgba(16, 24, 40, 0.4), rgba(16, 24, 40, 0.4)),
+                url('/static/car.webp') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #f8fafc;
+        }
+        .page {
+            max-width: 760px;
+            margin: 36px auto;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 24px 64px rgba(15, 23, 42, 0.18);
+        }
+        h1 { margin-top: 0; color: #111827; }
+        label { display: block; margin-bottom: 12px; color: #1f2937; }
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            margin-top: 4px;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.85);
+            color: #111827;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
+        }
+        .field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 18px; }
+        .button-row { margin-top: 22px; }
+        button { background: #2563eb; color: #fff; padding: 14px 20px; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; }
+        button:hover { background: #1d4ed8; }
+        .result-box { margin-top: 24px; padding: 18px 22px; background: rgba(236, 246, 255, 0.95); border-radius: 12px; color: #1d4ed8; }
+        .notice { margin-top: 16px; color: #475569; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>Auto MPG Predictor</h1>
+        <p class="notice">Enter car parameters below and submit to estimate fuel efficiency in miles per gallon.</p>
+
+        <form method="post">
+            <div class="field-row">
+                <label>
+                    Cylinders
+                    <input type="number" name="cylinders" value="4" min="3" max="12" required />
+                </label>
+                <label>
+                    Displacement
+                    <input type="number" name="displacement" value="150" min="50" max="500" step="0.1" required />
+                </label>
+            </div>
+            <div class="field-row">
+                <label>
+                    Horsepower
+                    <input type="number" name="horsepower" value="100" min="50" max="300" step="0.1" required />
+                </label>
+                <label>
+                    Weight
+                    <input type="number" name="weight" value="2800" min="1500" max="5500" step="1" required />
+                </label>
+            </div>
+            <div class="field-row">
+                <label>
+                    Acceleration
+                    <input type="number" name="acceleration" value="15" min="5" max="30" step="0.1" required />
+                </label>
+                <label>
+                    Model Year
+                    <input type="number" name="model_year" value="70" min="70" max="82" required />
+                </label>
+            </div>
+            <div class="field-row">
+                <label>
+                    Origin
+                    <select name="origin" required>
+                        <option value="1">USA</option>
+                        <option value="2">Europe</option>
+                        <option value="3">Japan</option>
+                    </select>
+                </label>
+                <label>
+                    Brand
+                    <select name="brand" required>
+                        {% for brand in brands %}
+                            <option value="{{ brand }}">{{ brand }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="button-row">
+                <button type="submit">Estimate MPG</button>
+            </div>
+        </form>
+
+        {% if prediction is not none %}
+            <div class="result-box">
+                <h2>Predicted MPG</h2>
+                <p><strong>{{ prediction | round(2) }}</strong> miles per gallon</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
